@@ -33,9 +33,11 @@ module.exports = {
             requiredVersion: deps.react,
           },
           'react-dom': {
-         
             singleton: true,
             requiredVersion: deps['react-dom'],
+          },
+          'dayjs': {
+            requiredVersion: deps['dayjs'],
           },
         },
       ],

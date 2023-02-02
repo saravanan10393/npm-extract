@@ -7,7 +7,7 @@ module.exports = {
   mode: 'production',
   output: {
     path: path.join(__dirname, "../bucket"),
-    filename: "./host/[name].js",
+    filename: "./remote2/[name].js",
     publicPath: '/',
   },
   module: {
@@ -16,29 +16,24 @@ module.exports = {
         test: /\.js?$/,
         loader: 'swc-loader',
         exclude: /node_modules/,
-        // options: {
-        //   presets: ['@babel/preset-react'],
-        // },
       },
     ],
   },
   plugins: [
     new ModuleFederationPlugin({
-      name: 'host',
-      filename: 'host/remoteEntry.js',
-      remotes: {
-        remote: ['remote@http://localhost/remote/remoteEntry.js'],
-        remote2: ['remote2@http://localhost/remote2/remoteEntry.js'],
+      name: 'remote2',
+      filename: 'remote2/remoteEntry.js',
+      exposes: {
+        './Button': './src/button.js',
       },
       shared: [
         {
           react: {
-            // eager: true,
             singleton: true,
             requiredVersion: deps.react,
           },
           'react-dom': {
-            // eager: true,
+         
             singleton: true,
             requiredVersion: deps['react-dom'],
           },
@@ -51,8 +46,7 @@ module.exports = {
     }),
     new HtmlWebpackPlugin({
       template: './public/index.html',
-      scriptLoading: "blocking",
-      minify: false
+      filename: './remote2/index.html'
     }),
   ],
   optimization: {
@@ -81,6 +75,7 @@ module.exports = {
           filename: `./vendor/[name].js`
         }
       }
-    }
+    },
+    minimize: false
   }
 };
